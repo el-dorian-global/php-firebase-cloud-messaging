@@ -1,11 +1,11 @@
 <?php
-namespace sngrl\PhpFirebaseCloudMessaging;
+namespace veldor\PhpFirebaseCloudMessaging;
 
 use GuzzleHttp;
 
 /**
  *
- * @author sngrl
+ * @author veldor
  *
  */
 interface ClientInterface
@@ -17,7 +17,7 @@ interface ClientInterface
      *
      * @param string $apiKey
      *
-     * @return \sngrl\PhpFirebaseCloudMessaging\Client
+     * @return \veldor\PhpFirebaseCloudMessaging\Client
      */
     function setApiKey($apiKey);
     
@@ -27,7 +27,7 @@ interface ClientInterface
      *
      * @param string $url
      *
-     * @return \sngrl\PhpFirebaseCloudMessaging\Client
+     * @return \veldor\PhpFirebaseCloudMessaging\Client
      */
     function setProxyApiUrl($url);
 

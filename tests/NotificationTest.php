@@ -1,7 +1,7 @@
 <?php
-namespace sngrl\PhpFirebaseCloudMessaging\Tests;
+namespace veldor\PhpFirebaseCloudMessaging\Tests;
 
-use sngrl\PhpFirebaseCloudMessaging\Notification;
+use veldor\PhpFirebaseCloudMessaging\Notification;
 
 class NotificationTest extends PhpFirebaseCloudMessagingTestCase
 {

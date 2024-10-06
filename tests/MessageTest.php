@@ -1,11 +1,11 @@
 <?php
-namespace sngrl\PhpFirebaseCloudMessaging\Tests;
+namespace veldor\PhpFirebaseCloudMessaging\Tests;
 
-use sngrl\PhpFirebaseCloudMessaging\Recipient\Recipient;
-use sngrl\PhpFirebaseCloudMessaging\Message;
-use sngrl\PhpFirebaseCloudMessaging\Recipient\Topic;
-use sngrl\PhpFirebaseCloudMessaging\Notification;
-use sngrl\PhpFirebaseCloudMessaging\Recipient\Device;
+use veldor\PhpFirebaseCloudMessaging\Recipient\Recipient;
+use veldor\PhpFirebaseCloudMessaging\Message;
+use veldor\PhpFirebaseCloudMessaging\Recipient\Topic;
+use veldor\PhpFirebaseCloudMessaging\Notification;
+use veldor\PhpFirebaseCloudMessaging\Recipient\Device;
 
 class MessageTest extends PhpFirebaseCloudMessagingTestCase
 {

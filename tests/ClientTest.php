@@ -1,9 +1,9 @@
 <?php
-namespace sngrl\PhpFirebaseCloudMessaging\Tests;
+namespace veldor\PhpFirebaseCloudMessaging\Tests;
 
-use sngrl\PhpFirebaseCloudMessaging\Client;
-use sngrl\PhpFirebaseCloudMessaging\Recipient\Topic;
-use sngrl\PhpFirebaseCloudMessaging\Message;
+use veldor\PhpFirebaseCloudMessaging\Client;
+use veldor\PhpFirebaseCloudMessaging\Recipient\Topic;
+use veldor\PhpFirebaseCloudMessaging\Message;
 
 use GuzzleHttp;
 use GuzzleHttp\Psr7\Response;
