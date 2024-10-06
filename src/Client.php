@@ -1,6 +1,7 @@
 <?php
 namespace veldor\PhpFirebaseCloudMessaging;
 
+use Exception;
 use GuzzleHttp;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
@@ -22,16 +23,16 @@ class Client implements ClientInterface
 
     private $oauthKey;
     private $proxyApiUrl;
-    private $guzzleClient;
+    //private $guzzleClient;
     /**
      * @var mixed
      */
     private $projectId;
 
-    public function injectGuzzleHttpClient(GuzzleHttp\ClientInterface $client)
+  /*  public function injectGuzzleHttpClient(GuzzleHttp\ClientInterface $client)
     {
         $this->guzzleClient = $client;
-    }
+    }*/
 
     /**
      * add your server api key here
@@ -77,7 +78,25 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
-        return $this->guzzleClient->post(
+        $url = 'https://fcm.googleapis.com/v1/projects/' . $this->projectId . '/messages:send';
+        $headers = [
+            'Authorization: Bearer ' . $this->oauthKey,
+            'Content-Type: application/json',
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['message' => $message]));
+        $response = curl_exec($ch);
+        if ($response === false) {
+            throw new Exception('Curl error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        return json_decode($response, true);
+
+        /*return $this->guzzleClient->post(
             $this->getApiUrl(),
             [
                 'headers' => [
@@ -86,7 +105,7 @@ class Client implements ClientInterface
                 ],
                 'body' => json_encode($message)
             ]
-        );
+        );*/
     }
 
     /**
@@ -124,20 +143,6 @@ class Client implements ClientInterface
     {
         if (!is_array($recipients_tokens))
             $recipients_tokens = [$recipients_tokens];
-
-        return $this->guzzleClient->post(
-            $url,
-            [
-                'headers' => [
-                    'Authorization' => sprintf('key=%s', $this->oauthKey),
-                    'Content-Type' => 'application/json'
-                ],
-                'body' => json_encode([
-                    'to' => '/topics/' . $topic_id,
-                    'registration_tokens' => $recipients_tokens,
-                ])
-            ]
-        );
     }
 
 

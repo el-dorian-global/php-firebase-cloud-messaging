@@ -23,7 +23,8 @@
   "require": {
     "guzzlehttp/guzzle": "*",
     "php": ">=5.5",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
