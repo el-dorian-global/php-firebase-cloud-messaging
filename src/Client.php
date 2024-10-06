@@ -2,19 +2,31 @@
 namespace veldor\PhpFirebaseCloudMessaging;
 
 use GuzzleHttp;
+use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @author veldor
  */
 class Client implements ClientInterface
 {
-    const DEFAULT_API_URL = 'https://fcm.googleapis.com/fcm/send';
+    //const DEFAULT_API_URL = 'https://fcm.googleapis.com/fcm/send';
+
+    private function getDefaultApiUrl()
+    {
+        return "https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send";
+    }
+
     const DEFAULT_TOPIC_ADD_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchAdd';
     const DEFAULT_TOPIC_REMOVE_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchRemove';
 
     private $apiKey;
     private $proxyApiUrl;
     private $guzzleClient;
+    /**
+     * @var mixed
+     */
+    private $projectId;
 
     public function injectGuzzleHttpClient(GuzzleHttp\ClientInterface $client)
     {
@@ -27,11 +39,17 @@ class Client implements ClientInterface
      *
      * @param string $apiKey
      *
-     * @return \veldor\PhpFirebaseCloudMessaging\Client
+     * @return Client
      */
     public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
+        return $this;
+    }
+
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
         return $this;
     }
 
@@ -40,7 +58,7 @@ class Client implements ClientInterface
      *
      * @param string $url
      *
-     * @return \veldor\PhpFirebaseCloudMessaging\Client
+     * @return Client
      */
     public function setProxyApiUrl($url)
     {
@@ -54,8 +72,8 @@ class Client implements ClientInterface
      *
      * @param Message $message
      *
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\RequestException
+     * @return ResponseInterface
+     * @throws RequestException
      */
     public function send(Message $message)
     {
@@ -75,7 +93,7 @@ class Client implements ClientInterface
      * @param integer $topic_id
      * @param array|string $recipients_tokens
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
     public function addTopicSubscription($topic_id, $recipients_tokens)
     {
@@ -87,7 +105,7 @@ class Client implements ClientInterface
      * @param integer $topic_id
      * @param array|string $recipients_tokens
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
     public function removeTopicSubscription($topic_id, $recipients_tokens)
     {
@@ -100,7 +118,7 @@ class Client implements ClientInterface
      * @param array|string $recipients_tokens
      * @param string $url
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
     protected function processTopicSubscription($topic_id, $recipients_tokens, $url)
     {
@@ -125,6 +143,6 @@ class Client implements ClientInterface
 
     private function getApiUrl()
     {
-        return isset($this->proxyApiUrl) ? $this->proxyApiUrl : self::DEFAULT_API_URL;
+        return isset($this->proxyApiUrl) ? $this->proxyApiUrl : $this->getDefaultApiUrl();
     }
 }

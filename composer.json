@@ -1,31 +1,42 @@
 {
-    "name": "el-dorian-global/php-firebase-cloud-messaging",
-    "description": "PHP API for Firebase Cloud Messaging from Google",
-    "license": "MIT",
-    "keywords": ["PHP","FCM","Google","Firebase","Cloud","Notifications","Android","iOS","Chrome"],
-    "homepage": "https://github.com/el-dorian-global/php-firebase-cloud-messaging",
-    "authors": [
-        {
-            "name": "Veldor",
-            "email": "eldorianwin@gmail.com"
-        }
-    ],
-    "require": {
-        "guzzlehttp/guzzle": "*",
-        "php": ">=5.5"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "*",
-        "mockery/mockery" : "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "veldor\\PhpFirebaseCloudMessaging\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "veldor\\PhpFirebaseCloudMessaging\\Tests\\": "tests/"
-        }
+  "name": "el-dorian-global/php-firebase-cloud-messaging",
+  "description": "PHP API for Firebase Cloud Messaging from Google",
+  "license": "MIT",
+  "keywords": [
+    "PHP",
+    "FCM",
+    "Google",
+    "Firebase",
+    "Cloud",
+    "Notifications",
+    "Android",
+    "iOS",
+    "Chrome"
+  ],
+  "homepage": "https://github.com/el-dorian-global/php-firebase-cloud-messaging",
+  "authors": [
+    {
+      "name": "Veldor",
+      "email": "eldorianwin@gmail.com"
     }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "*",
+    "php": ">=5.5",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "mockery/mockery": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "veldor\\PhpFirebaseCloudMessaging\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "veldor\\PhpFirebaseCloudMessaging\\Tests\\": "tests/"
+    }
+  }
 }
