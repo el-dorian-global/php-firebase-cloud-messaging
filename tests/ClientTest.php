@@ -33,7 +33,7 @@ class ClientTest extends PhpFirebaseCloudMessagingTestCase
             ->andReturn(\Mockery::mock(Response::class));
 
         $this->fixture->injectGuzzleHttpClient($guzzle);
-        $this->fixture->setApiKey($apiKey);
+        $this->fixture->setOauthKey($apiKey);
 
         $message = new Message();
         $message->addRecipient(new Topic('test'));

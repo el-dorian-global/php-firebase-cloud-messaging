@@ -19,7 +19,7 @@ interface ClientInterface
      *
      * @return \veldor\PhpFirebaseCloudMessaging\Client
      */
-    function setApiKey($apiKey);
+    function setOauthKey($apiKey);
     
 
     /**

@@ -20,7 +20,7 @@ class Client implements ClientInterface
     const DEFAULT_TOPIC_ADD_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchAdd';
     const DEFAULT_TOPIC_REMOVE_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchRemove';
 
-    private $apiKey;
+    private $oauthKey;
     private $proxyApiUrl;
     private $guzzleClient;
     /**
@@ -37,13 +37,13 @@ class Client implements ClientInterface
      * add your server api key here
      * read how to obtain an api key here: https://firebase.google.com/docs/server/setup#prerequisites
      *
-     * @param string $apiKey
+     * @param string $oauthKey
      *
      * @return Client
      */
-    public function setApiKey($apiKey)
+    public function setOauthKey($oauthKey)
     {
-        $this->apiKey = $apiKey;
+        $this->oauthKey = $oauthKey;
         return $this;
     }
 
@@ -81,7 +81,7 @@ class Client implements ClientInterface
             $this->getApiUrl(),
             [
                 'headers' => [
-                    'Authorization' => sprintf('key=%s', $this->apiKey),
+                    'Authorization: Bearer ' . $this->oauthKey,
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode($message)
@@ -129,7 +129,7 @@ class Client implements ClientInterface
             $url,
             [
                 'headers' => [
-                    'Authorization' => sprintf('key=%s', $this->apiKey),
+                    'Authorization' => sprintf('key=%s', $this->oauthKey),
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode([
