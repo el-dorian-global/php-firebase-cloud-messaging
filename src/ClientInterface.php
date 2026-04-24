@@ -1,8 +1,6 @@
 <?php
 namespace veldor\PhpFirebaseCloudMessaging;
 
-use GuzzleHttp;
-
 /**
  *
  * @author veldor
@@ -17,7 +15,7 @@ interface ClientInterface
      *
      * @param string $apiKey
      *
-     * @return \veldor\PhpFirebaseCloudMessaging\Client
+     * @return Client
      */
     function setOauthKey($apiKey);
     
@@ -27,18 +25,14 @@ interface ClientInterface
      *
      * @param string $url
      *
-     * @return \veldor\PhpFirebaseCloudMessaging\Client
+     * @return Client
      */
     function setProxyApiUrl($url);
 
     /**
-     * sends your notification to the google servers and returns a guzzle repsonse object
-     * containing their answer.
-     *
      * @param Message $message
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\RequestException
+     * @return array|null
+     * @throws \Exception
      */
     function send(Message $message);
     

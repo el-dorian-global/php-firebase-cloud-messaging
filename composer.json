@@ -21,8 +21,7 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "*",
-    "php": ">=5.5",
+    "php": ">=8.0",
     "ext-json": "*",
     "ext-curl": "*"
   },

@@ -84,7 +84,7 @@ class Notification extends Message
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $jsonData = $this->getJsonData();
         if ($this->title) {
