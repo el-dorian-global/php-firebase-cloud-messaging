@@ -37,6 +37,11 @@ class Message implements \JsonSerializable
      *
      * @return \veldor\PhpFirebaseCloudMessaging\Message
      */
+    public function setRecepient(Recipient $recipient)
+    {
+        return $this->addRecipient($recipient);
+    }
+
     public function addRecipient(Recipient $recipient)
     {
         $this->recipients[] = $recipient;
