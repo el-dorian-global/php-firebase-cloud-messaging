@@ -20,7 +20,7 @@ class Message implements \JsonSerializable
     private $collapseKey;    
     private $priority;
     private $data;
-    private $recipients = [];
+    private array $recipients = [];
     private $recipientType;    
     private $jsonData;
     private $condition;

@@ -86,7 +86,7 @@ class Client implements ClientInterface
         if ($response === false) {
             throw new Exception('Curl error: ' . curl_error($ch));
         }
-        curl_close($ch);
+
         return json_decode($response, true);
     }
 
@@ -142,7 +142,7 @@ class Client implements ClientInterface
         if ($response === false) {
             throw new Exception('Curl error: ' . curl_error($ch));
         }
-        curl_close($ch);
+
         return json_decode($response, true);
     }
 
