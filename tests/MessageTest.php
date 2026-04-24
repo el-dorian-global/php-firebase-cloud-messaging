@@ -41,7 +41,7 @@ class MessageTest extends PhpFirebaseCloudMessagingTestCase
 
     public function testJsonEncodeWorksOnTopicRecipients()
     {
-        $body = '{"to":"\/topics\/breaking-news","notification":{"title":"test","body":"a nice testing notification"}}';
+        $body = '{"topic":"breaking-news","notification":{"title":"test","body":"a nice testing notification"}}';
 
         $notification = new Notification('test', 'a nice testing notification');
         $message = new Message();
@@ -56,7 +56,7 @@ class MessageTest extends PhpFirebaseCloudMessagingTestCase
 
     public function testJsonEncodeWorksOnDeviceRecipients()
     {
-        $body = '{"to":"deviceId","notification":{"title":"test","body":"a nice testing notification"}}';
+        $body = '{"token":"deviceId","notification":{"title":"test","body":"a nice testing notification"}}';
 
         $notification = new Notification('test', 'a nice testing notification');
         $message = new Message();
@@ -67,5 +67,34 @@ class MessageTest extends PhpFirebaseCloudMessagingTestCase
             $body,
             json_encode($message)
         );
+    }
+
+    public function testDataValuesAreSerializedAsStringsForV1()
+    {
+        $message = new Message();
+        $message->addRecipient(new Device('deviceId'));
+        $message->setData([
+            'bill_id' => 12816,
+            'is_paid' => true,
+            'amount' => 1739.95,
+        ]);
+
+        $payload = $message->jsonSerialize();
+
+        $this->assertSame('12816', $payload['data']['bill_id']);
+        $this->assertSame('true', $payload['data']['is_paid']);
+        $this->assertSame('1739.95', $payload['data']['amount']);
+    }
+
+    public function testPriorityIsMappedToPlatformConfigForV1()
+    {
+        $message = new Message();
+        $message->addRecipient(new Device('deviceId'));
+        $message->setPriority('high');
+
+        $payload = $message->jsonSerialize();
+
+        $this->assertSame('HIGH', $payload['android']['priority']);
+        $this->assertSame('10', $payload['apns']['headers']['apns-priority']);
     }
 }

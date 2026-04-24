@@ -170,22 +170,16 @@ class Message implements \JsonSerializable
             throw new \UnexpectedValueException('Message must have at least one recipient');
         }
         
-        if (count($this->recipients) == 1) {
-            $jsonData['to'] = $this->createTarget();    
-        } elseif ($this->recipientType == Device::class) {
-            $jsonData['registration_ids'] = $this->createTarget();
-        } else {
-            $jsonData['condition'] = $this->createTarget();
-        }       
-        
+        $jsonData = array_merge($jsonData, $this->createTarget());
+
         if ($this->collapseKey) {
-            $jsonData['collapse_key'] = $this->collapseKey;
+            $jsonData['android']['collapse_key'] = $this->collapseKey;
         }
         if ($this->data) {
-            $jsonData['data'] = $this->data;
+            $jsonData['data'] = $this->normalizeData($this->data);
         }
         if ($this->priority) {
-            $jsonData['priority'] = $this->priority;
+            $this->applyPriority($jsonData, $this->priority);
         }
         if ($this->notification) {
             $jsonData['notification'] = $this->notification;
@@ -203,8 +197,8 @@ class Message implements \JsonSerializable
             case Topic::class:
                 
                 if ($recipientCount == 1) {
-                    return sprintf('/topics/%s', current($this->recipients)->getName());    
-                    
+                    return ['topic' => $this->normalizeTopicName(current($this->recipients)->getName())];
+
                 } else if ($recipientCount > self::MAX_TOPICS) {
                     throw new \OutOfRangeException(sprintf('Message topic limit exceeded. Firebase supports a maximum of %u topics.', self::MAX_TOPICS));
                     
@@ -219,30 +213,74 @@ class Message implements \JsonSerializable
                     foreach ($this->recipients as $recipient) {
                         $names[] = vsprintf("'%s' in topics", $recipient->getName());
                     }
-                    return vsprintf($this->condition, $names);
-                }                
+                    return ['condition' => vsprintf($this->condition, $names)];
+                }
                 break;
 
             case Device::class:
                 
                 if ($recipientCount == 1) { 
-                    return current($this->recipients)->getToken();
-                    
+                    return ['token' => current($this->recipients)->getToken()];
+
                 } else if ($recipientCount > self::MAX_DEVICES) {
                     throw new \OutOfRangeException(sprintf('Message device limit exceeded. Firebase supports a maximum of %u devices.', self::MAX_DEVICES));
                     
                 } else {
-                    $ids = [];
-                    foreach ($this->recipients as $recipient) {                        
-                        $ids[] = $recipient->getToken();
-                    }
-                    return $ids;
+                    throw new \UnexpectedValueException('FCM HTTP v1 send endpoint supports a single device token per request.');
                 }
                 break;
                 
             default:
                 break;
         }
-        return null;
+        return [];
+    }
+
+    private function normalizeData(array $data): array
+    {
+        $normalized = [];
+
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $normalized[$key] = $value;
+                continue;
+            }
+
+            if (is_bool($value)) {
+                $normalized[$key] = $value ? 'true' : 'false';
+                continue;
+            }
+
+            if ($value === null) {
+                $normalized[$key] = '';
+                continue;
+            }
+
+            if (is_scalar($value)) {
+                $normalized[$key] = (string)$value;
+                continue;
+            }
+
+            $encoded = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if ($encoded === false) {
+                throw new \InvalidArgumentException(sprintf('Message data value for key "%s" is not serializable.', $key));
+            }
+
+            $normalized[$key] = $encoded;
+        }
+
+        return $normalized;
+    }
+
+    private function applyPriority(array &$jsonData, $priority): void
+    {
+        $normalized = strtoupper((string)$priority);
+        $jsonData['android']['priority'] = $normalized;
+        $jsonData['apns']['headers']['apns-priority'] = $normalized === 'HIGH' ? '10' : '5';
+    }
+
+    private function normalizeTopicName(string $topic): string
+    {
+        return preg_replace('#^/topics/#', '', $topic);
     }
 }
